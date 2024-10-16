@@ -3,7 +3,7 @@ The code and exe generate a .html file for an almanac for a BotC script json aut
 Images are as of now not functional, but you can construct the rest of the setup by adding extra parts to the json.
 
 All characters need:
-  - "id" (usually in the format "namelowercase_scriptname")
+  - "id" (sometimes in the format "namelowercase_scriptname", but any format works)
   - "name"
   - "team" ("townsfolk", "outsider", "minion", "demon", "traveler")
   - "ability"
