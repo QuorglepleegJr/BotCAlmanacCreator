@@ -15,4 +15,5 @@ You can also add:
   - "examples" (this is formatted as a list of strings, each one being one example - e.g. ["interaction1", "interaction2"]
   - "howtorun" (this is a single string)
   - "tip"
+
 If it breaks, ping me on discord (@quorg), unless you can see an obvious problem with the json file or wish to try fix it yourself.
