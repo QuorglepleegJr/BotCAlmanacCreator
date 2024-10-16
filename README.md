@@ -7,7 +7,9 @@ All characters need:
   - "name"
   - "team" ("townsfolk", "outsider", "minion", "demon", "traveler")
   - "ability"
+
 The program will crash without these.
+
 You can also add:
   - "overview"
   - "examples" (this is formatted as a list of strings, each one being one example - e.g. ["interaction1", "interaction2"]
