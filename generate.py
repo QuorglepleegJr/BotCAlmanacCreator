@@ -1,4 +1,5 @@
 import json
+import traceback
 
 def generate_almanac_from_json(in_filename, out_filename):
 
@@ -6,15 +7,15 @@ def generate_almanac_from_json(in_filename, out_filename):
 
 def load_json_from_file(filename):
 
-    with open(filename + ".json", "rb") as file:
+    with open(filename + ".json", "r", encoding="utf-8") as file:
 
-        out = json.load(file)
+        out = json.loads(file.read())
 
     return out
 
 def generate_almanac(in_json, filename):
 
-    with open(filename + ".html", "w") as file:
+    with open(filename + ".html", "w", encoding="utf-8") as file:
         file.write('''
         
 <!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -509,54 +510,62 @@ def generate_almanac(in_json, filename):
         file.write("<ol class=\"nav\">\n")
 
         for character in in_json[1:]:
-            file.write(f"<li class=\"{character['team']}\"><a href=\"#{character['id']}\">{character['name']}</a></li>\n")
+            if type(character) != str:
+                file.write(f"<li class=\"{character['team']}\"><a href=\"#{character['id']}\">{character['name']}</a></li>\n")
         file.write("<a href=\"#nightOrder\">Night Order</a></li>\n")
         file.write("</ol>\n")
         file.write("<ol class=\"almanac-viewport\">\n")
 
         for character in in_json[1:]:
+
+            if type(character) != str:
             
-            file.write(f"<li class=\"page\" id=\"{character['id']}\">\n")
-            file.write(f"<div class=\"page-contents {character['team']}\">\n")
-            file.write(f"<h2>{character['name']}</h2>\n")
-            file.write(f"<p class=\"ability\">{character['ability']}</p>\n")
-            file.write("<hr>\n")
-            
-            if character.get('flavour') is not None:
+                file.write(f"<li class=\"page\" id=\"{character['id']}\">\n")
+                file.write(f"<div class=\"page-contents {character['team']}\">\n")
 
-                file.write(f"<div class=\"flavor\">{character['flavour']}</div>\n")
-            
-            if character.get('overview') is not None:
+                if character.get('image') is not None:
 
-                file.write(f"<div class=\"overview\"><p>{character['overview']}</p></div>\n")
-            
-            if character.get('examples') is not None:
+                    file.write(f"<img src=\"{character['image']}\" class=\"characterImage\" alt=\"\"/>")
 
-                file.write("<h3>Examples</h3>\n")
-                file.write("<div class=\"example\">\n")
-
-                for example in character['examples']:
-
-                    file.write(f"<p>{example}</p>\n")
+                file.write(f"<h2>{character['name']}</h2>\n")
+                file.write(f"<p class=\"ability\">{character['ability']}</p>\n")
+                file.write("<hr>\n")
                 
-                file.write("</div>\n")
-            
-            if character.get('howtorun') is not None:
+                if character.get('flavour') is not None:
 
-                file.write("<h3>How to Run</h3>\n")
-                file.write("<div class=\"how-to-run\">\n")
-                file.write(f"<p>{character['howtorun']}</p>\n")
-                file.write("</div>\n")
-            
-            if character.get('tip') is not None:
+                    file.write(f"<div class=\"flavor\">{character['flavour']}</div>\n")
+                
+                if character.get('overview') is not None:
 
-                file.write("<div class=\"tip\">\n")
-                file.write(f"<p>{character['tip']}</p>\n")
-                file.write("</div>\n")
+                    file.write(f"<div class=\"overview\"><p>{character['overview']}</p></div>\n")
+                
+                if character.get('examples') is not None:
+
+                    file.write("<h3>Examples</h3>\n")
+                    file.write("<div class=\"example\">\n")
+
+                    for example in character['examples']:
+
+                        file.write(f"<p>{example}</p>\n")
+                    
+                    file.write("</div>\n")
+                
+                if character.get('howtorun') is not None:
+
+                    file.write("<h3>How to Run</h3>\n")
+                    file.write("<div class=\"how-to-run\">\n")
+                    file.write(f"<p>{character['howtorun']}</p>\n")
+                    file.write("</div>\n")
             
-            file.write(f"<p class=\"team\">{character['team'][0].upper() + character['team'][1:]}</p>")
-            file.write("</div>\n")
-            file.write("</li>\n")
+                if character.get('tip') is not None:
+
+                    file.write("<div class=\"tip\">\n")
+                    file.write(f"<p>{character['tip']}</p>\n")
+                    file.write("</div>\n")
+                
+                file.write(f"<p class=\"team\">{character['team'][0].upper() + character['team'][1:]}</p>")
+                file.write("</div>\n")
+                file.write("</li>\n")
         
         file.write("<li class=\"page\" id=\"nightOrder\">\n")
         file.write("<div class=\"page-contents\">\n")
@@ -569,8 +578,10 @@ def generate_almanac(in_json, filename):
 
         for character in in_json[1:]:
 
-            file.write(f"<div class=\"nightOrderListName\">\n{character['name']}</div>\n")
-            file.write("<div></div>\n")
+            if type(character) != str:
+
+                file.write(f"<div class=\"nightOrderListName\">\n{character['name']}</div>\n")
+                file.write("<div></div>\n")
         
         file.write("</li></ol></div></body></html>")
 
@@ -583,7 +594,7 @@ def main(in_name = "", out_name = ""):
     try:
         generate_almanac_from_json(in_name, out_name)
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
         print("Something went wrong. Check the json file exists. Alternatively, forward this to Quorg.")
 
 if __name__ == "__main__": 
